@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
+
 package com.eclecticengineering.bdm
 
 import com.eclecticengineering.bdm.Resource.*
@@ -30,13 +32,13 @@ fun main() {
             ++successes
         } else {
             Resource.values().forEach {
-                if (counters.counters[it]!!.mustStop() == true) {
+                if (counters.counters.getValue(it).mustStop()) {
                     trackers[it]!!.incrementExceeded()
                 }
             }
         }
         Resource.values().forEach {
-            trackers[it]!!.record(counters.counters[it]!!.getCount() ?: 0)
+            trackers.getValue(it).record(counters.counters.getValue(it).getCount())
         }
         counters.reset()
     }
@@ -52,7 +54,7 @@ fun main() {
 
 private fun printResult(
     name: String,
-    trials: Int,
+    @Suppress("SameParameterValue") trials: Int,
     tracker: Tracker?
 ) {
     if (tracker == null) {
@@ -107,6 +109,7 @@ class Distribution {
     }
 }
 
+@Suppress("unused")
 enum class ItemType {
     GEAR {
         override fun makeChance(config: Config, counters: CounterSet): Chance =
