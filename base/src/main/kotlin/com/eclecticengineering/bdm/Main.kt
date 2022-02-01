@@ -12,38 +12,16 @@ import java.io.InputStreamReader
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
-    val trials = 100_000
+    val trials = 100_000L
     val externalConfig = Hocon.decodeFromConfig<ExternalConfig>(
         ConfigFactory.parseReader(
             InputStreamReader(System.`in`)
         )
     )
-    val config = Config(externalConfig)
-    val counters = CounterSet(config)
-    val chance = config.itemType.makeChance(config, counters)
-    var successes = 0L
-    val trackers: MutableMap<Resource, Tracker> = mutableMapOf()
-    Resource.values().forEach {
-        trackers[it] = Tracker()
-    }
-    for (i in 1..trials) {
-        val enhancer = Enhancer(chance, counters, config)
-        if (enhancer.execute()) {
-            ++successes
-        } else {
-            Resource.values().forEach {
-                if (counters.counters.getValue(it).mustStop()) {
-                    trackers[it]!!.incrementExceeded()
-                }
-            }
-        }
-        Resource.values().forEach {
-            trackers.getValue(it).record(counters.counters.getValue(it).getCount())
-        }
-        counters.reset()
-    }
+    val result = runRepeatedTrials(externalConfig, trials)
+    val successes = result.successes
+    val trackers: Map<Resource, Tracker> = result.trackers
     println(Hocon.encodeToConfig(externalConfig))
-    println(Hocon.encodeToConfig(config))
     println("probability of success = ${successes.toDouble() / trials}")
     printResult("crystal", trials, trackers[CRYSTAL])
     printResult("valks10", trials, trackers[VALKS10])
@@ -52,9 +30,47 @@ fun main() {
     printResult("restoreScrolls", trials, trackers[RESTORE_SCROLLS])
 }
 
+@Suppress("SameParameterValue")
+private fun runRepeatedTrials(
+    externalConfig: ExternalConfig,
+    trials: Long
+): RepeatedTrialsResult {
+    val config = Config(externalConfig)
+    val counters = CounterSet(config)
+    val chance = config.itemType.makeChance(config, counters)
+    var successes = 0L
+    val trackers: MutableMap<Resource, Tracker> = mutableMapOf()
+    values().forEach {
+        trackers[it] = Tracker()
+    }
+    for (i in 1..trials) {
+        val enhancer = Enhancer(chance, counters, config)
+        if (enhancer.execute()) {
+            ++successes
+        } else {
+            values().forEach {
+                if (counters.counters.getValue(it).mustStop()) {
+                    trackers[it]!!.incrementExceeded()
+                }
+            }
+        }
+        values().forEach {
+            trackers.getValue(it).record(counters.counters.getValue(it).getCount())
+        }
+        counters.reset()
+    }
+    return RepeatedTrialsResult(trials, successes, trackers)
+}
+
+class RepeatedTrialsResult(
+    @Suppress("unused") val trials: Long,
+    val successes: Long,
+    val trackers: Map<Resource, Tracker>
+)
+
 private fun printResult(
     name: String,
-    @Suppress("SameParameterValue") trials: Int,
+    @Suppress("SameParameterValue") trials: Long,
     tracker: Tracker?
 ) {
     if (tracker == null) {
