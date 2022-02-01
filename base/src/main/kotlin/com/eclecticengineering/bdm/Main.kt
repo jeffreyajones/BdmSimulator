@@ -127,6 +127,14 @@ enum class ItemType {
                 )
             )
     },
+    ACCESSORY {
+        override fun makeChance(config: Config, counters: CounterSet): Chance =
+            SimpleChance(listOf(100.0, 100.0, 100.0, 60.0, 41.0, 28.0, 9.0, 4.0, 1.0, 0.3), counters.counters[CRYSTAL])
+    },
+    RELIC {
+        override fun makeChance(config: Config, counters: CounterSet): Chance =
+            SimpleChance(listOf(50.0, 30.0, 10.0, 10.0, 10.0, 8.0, 5.0, 3.0, 1.0, 0.5), counters.counters[CRYSTAL])
+    },
     TOTEM {
         override fun makeChance(config: Config, counters: CounterSet): Chance =
             SimpleChance(listOf(70.0, 60.0, 50.0, 30.0, 15.0, 10.0, 5.0, 2.0, 1.0, 0.5), counters.counters[CRYSTAL])
