@@ -49,12 +49,14 @@ internal class CounterTest {
     fun exhaustedZero() {
         val counter = Counter(ResourceConfig(Resource.CRYSTAL, 0, 1, 5))
         assert(counter.exhausted())
+        assert(counter.mustStop())
     }
 
     @Test
     fun exhaustedOne() {
         val counter = Counter(ResourceConfig(Resource.CRYSTAL, 1, 1, 5))
         assert(!counter.exhausted())
+        assert(!counter.mustStop())
     }
 
     @Test
@@ -62,9 +64,13 @@ internal class CounterTest {
         val counter = Counter(ResourceConfig(Resource.CRYSTAL, 1, 1, 5))
         counter.increment()
         assert(counter.exhausted())
+        assert(counter.mustStop())
     }
 
     @Test
     fun mustStop() {
+        val counter = Counter(ResourceConfig(Resource.CRYSTAL, 1, 1, 5, true))
+        counter.increment()
+        assert(!counter.mustStop())
     }
 }

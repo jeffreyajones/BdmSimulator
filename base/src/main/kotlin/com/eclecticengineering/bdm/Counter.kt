@@ -29,12 +29,12 @@ class Counter(private val resourceConfig: ResourceConfig?) {
     }
 }
 
-class CounterSet(config: Config) {
+class CounterSet(resourceConfigMap: Map<Resource, ResourceConfig>) {
     val counters: Map<Resource, Counter>
 
     init {
         this.counters = mutableMapOf()
-        Resource.values().forEach { counters.put(it, Counter(config.resources[it])) }
+        Resource.values().forEach { counters.put(it, Counter(resourceConfigMap[it])) }
     }
 
     fun reset() {

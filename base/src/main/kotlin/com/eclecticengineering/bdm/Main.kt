@@ -36,7 +36,7 @@ private fun runRepeatedTrials(
     trials: Long
 ): RepeatedTrialsResult {
     val config = Config(externalConfig)
-    val counters = CounterSet(config)
+    val counters = CounterSet(config.resources)
     val chance = config.itemType.makeChance(config, counters)
     var successes = 0L
     val trackers: MutableMap<Resource, Tracker> = mutableMapOf()
