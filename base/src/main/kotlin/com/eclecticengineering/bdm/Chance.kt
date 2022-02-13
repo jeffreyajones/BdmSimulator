@@ -26,9 +26,9 @@ class Valks(
 ) : Chance {
     override fun getProbability(stage: Int): Double {
         val base = baseChance.getProbability(stage)
-        return if (resourceConfig != null
-            && stage in resourceConfig.startStage..resourceConfig.endStage
-            && counter?.exhausted() != true
+        return if ((resourceConfig != null)
+            && (stage in (resourceConfig.startStage..resourceConfig.endStage))
+            && (counter?.exhausted() != true)
         ) {
             counter?.increment()
             base * (1.0 + bonus)
