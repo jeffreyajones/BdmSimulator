@@ -23,7 +23,6 @@ internal class ChanceTest {
         assert(chance.getProbability(1) == 20.0)
     }
 
-    /*
     @Test
     fun valksBasic() {
         val counter = Counter(ResourceConfig(CRYSTAL, 5, 1, 3))
@@ -33,5 +32,4 @@ internal class ChanceTest {
             SimpleChance(listOf(10.0, 20.0, 30.0, 40.0, 50.0), counter)
         )
     }
-     */
 }

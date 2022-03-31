@@ -12,7 +12,7 @@ import java.io.InputStreamReader
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
-    val trials = 100_000L
+    val trials = 500_000L
     val externalConfig = Hocon.decodeFromConfig<ExternalConfig>(
         ConfigFactory.parseReader(
             InputStreamReader(System.`in`)
@@ -83,13 +83,14 @@ private fun printResult(
     }
     println(
         "exceeded= ${(tracker.exceeded.toDouble() / trials).format(7, 5)}"
-                + " average used= ${average.format(8, 2)}"
+                + " average used= ${average.format(9, 2)}"
                 + " fraction below average= "
                 + (tracker.distribution.getCountBelow(average.toInt()).toDouble() / trials).format(5, 3)
-                + " median=${tracker.distribution.getMedian().format(6)} "
-                + " 75%=${tracker.distribution.getPercentile(75).format(6)} "
-                + " 90%=${tracker.distribution.getPercentile(90).format(6)} "
-                + " 99%=${tracker.distribution.getPercentile(99).format(6)} "
+                + " median=${tracker.distribution.getMedian().format(7)} "
+                + " 75%=${tracker.distribution.getPercentile(75).format(7)} "
+                + " 90%=${tracker.distribution.getPercentile(90).format(7)} "
+                + " 95%=${tracker.distribution.getPercentile(95).format(7)} "
+                + " 99%=${tracker.distribution.getPercentile(99).format(7)} "
     )
 }
 
