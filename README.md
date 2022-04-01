@@ -1,7 +1,7 @@
 # BdmSimulator
 This simulates enhancements in Black Desert Mobile.  Input how many resources (pristine crystals, valks, resto scrolls) you have and what enhancement settings
 (e.g. what stage to start valks and resto scrolls, what your target stage is) you're planning on using, and the simulator will try it a whole bunch of times
-(currently 500K) and tells you what your probability of succeeding is, as well as how much of your resources you're likely to use.
+(currently 500K) and tell you what your probability of succeeding is, as well as how much of your resources you're likely to use.
 
 Input is via a HOCON file.  Examples are in base/input*.conf.
 
